@@ -1,8 +1,23 @@
 # Lý thuyết
 
-- Process: 
+- Process: Một process là một chương trình đang hoạt động trên máy tính. Nó bao gồm mã máy (executable code), dữ liệu, và tài nguyên hệ thống EPROCESS. Cấu trúc dữ liệu liên quan:
 
-- Thread:
+  - Process Control Block (PCB) là một cấu trúc dữ liệu trong hệ điều hành chứa thông tin về một process như địa chỉ của process, trạng thái, thanh ghi CPU,...
+
+  - Process Environment Block (PEB) liên kết giữa hai cấu trúc này thường được thể hiện qua trường Peb trong EPROCESS.
+
+- Thread: Một thread là một luồng thực thi trong một process. Một process có thể chứa nhiều thread chia sẻ các tài nguyên của process cha ETHREADS. Cấu trúc dữ liệu liên quan:
+
+  - Thread Control Block (TCB) chứa thông tin về một thread như địa chỉ của thread, trạng thái, thanh ghi CPU,...
+
+  - Thread Environment Block (TEB) liên kết giữa hai cấu trúc này thường được thể hiện qua trường Teb trong ETHREAD.
+
+- Event: Là một cơ chế đồng bộ hóa được sử dụng để đồng bộ hóa các hoạt động giữa các process hoặc các thread.
+Cấu trúc dữ liệu liên quan: EVENT_OBJECT trong Windows API.
+
+- Handle: Là một cơ chế cho phép quản lý và truy cập tài nguyên hệ thống như tệp tin, ổ đĩa, socket, v.v.
+
+- Session: Một session đại diện cho một phiên làm việc người dùng trên hệ thống hoặc một phiên tương tác giữa các event, handle với nhau. Trên Windows, mỗi phiên đăng nhập (logon session) sẽ có một ID duy nhất.
 
 # Bài tập
 
