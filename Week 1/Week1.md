@@ -30,8 +30,23 @@ Cấu trúc dữ liệu liên quan: EVENT_OBJECT trong Windows API.
 #include <iomanip>
 #include <psapi.h>
 using namespace std;
+bool set_se_debug()
+{
+    HANDLE hToken;
+    TOKEN_PRIVILEGES tp;
+    LUID luid;
+    OpenProcessToken(GetCurrentProcess(), TOKEN_ALL_ACCESS, &hToken);
+    LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &luid);
+    tp.PrivilegeCount = 1;
+    tp.Privileges[0].Luid = luid;
+    tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+    AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), NULL, NULL);
+    CloseHandle(hToken);
+    return true;
+}
 int main()
 {
+    set_se_debug();
     PROCESSENTRY32 pe32;
     pe32.dwSize = sizeof(pe32);
     HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
