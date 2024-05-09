@@ -28,6 +28,7 @@ Cấu trúc dữ liệu liên quan: EVENT_OBJECT trong Windows API.
 #include <windows.h>
 #include <tlhelp32.h>
 #include <iomanip>
+#include <psapi.h>
 using namespace std;
 int main()
 {
@@ -35,10 +36,13 @@ int main()
     pe32.dwSize = sizeof(pe32);
     HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     bool check = Process32First(hProcess, &pe32);
-    cout << left << setw(40) << "Image Name" << setw(10) << "PID" << endl;
+    cout << left << setw(40) << "Image Name" << setw(10) << "PID" << setw(10) << "Mem usage" << endl;
     while (check != FALSE)
     {
-        wcout << left << setw(40) << pe32.szExeFile << setw(10) << pe32.th32ProcessID << endl;
+        PROCESS_MEMORY_COUNTERS pmc;
+        HANDLE hRes = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pe32.th32ProcessID); 
+        GetProcessMemoryInfo(hRes, &pmc, sizeof(pmc));
+        wcout << left << setw(40) << pe32.szExeFile << setw(10) << pe32.th32ProcessID << setw(10) << pmc.WorkingSetSize / 1024 << " K" << endl;
         check = Process32Next(hProcess, &pe32);
     }
     CloseHandle(hProcess);
