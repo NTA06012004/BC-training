@@ -30,7 +30,7 @@ Cấu trúc dữ liệu liên quan: EVENT_OBJECT trong Windows API.
 #include <iomanip>
 #include <psapi.h>
 using namespace std;
-bool set_se_debug()
+void set_se_debug()
 {
     HANDLE hToken;
     TOKEN_PRIVILEGES tp;
@@ -42,7 +42,6 @@ bool set_se_debug()
     tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
     AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(TOKEN_PRIVILEGES), NULL, NULL);
     CloseHandle(hToken);
-    return true;
 }
 int main()
 {
