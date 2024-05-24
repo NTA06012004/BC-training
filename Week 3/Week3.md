@@ -122,12 +122,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 }
 ```
 
-- Test:
-
-```
-
-```
-
 - Bài 4
   - LoadLibrary Injection:
 
