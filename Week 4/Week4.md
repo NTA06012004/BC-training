@@ -2,6 +2,27 @@
 
 # Bài tập
 
+## Modifying registry keys 
+
+```
+#include <windows.h>
+
+int main() {
+    char path[MAX_PATH];
+    GetModuleFileNameA(NULL, path, MAX_PATH);
+    HKEY hKey;
+    const char* czStartName = "Hehe";
+    const char* czExePath = path;
+    if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Run", 0, KEY_SET_VALUE, &hKey) == ERROR_SUCCESS)
+    {
+        RegSetValueExA(hKey, czStartName, 0, REG_SZ, (LPBYTE)czExePath, strlen(czExePath) + 1);
+        RegCloseKey(hKey);
+    }
+
+    return 0;
+}
+```
+
 ## WMI event subscription
 
 ```
