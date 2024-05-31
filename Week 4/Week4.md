@@ -13,6 +13,8 @@
 
 int main()
 {
+    char path[MAX_PATH];
+    GetModuleFileNameA(NULL, path, MAX_PATH);
     HRESULT hres;
     hres = CoInitializeEx(0, COINIT_MULTITHREADED);
     if (FAILED(hres))
@@ -96,7 +98,7 @@ int main()
         return 1; 
     }
     _variant_t varFilterName = "MyFilter";
-    _variant_t varQuery = "SELECT * FROM __InstanceCreationEvent WHERE TargetInstance ISA 'Win32_Process'";
+    _variant_t varQuery = "SELECT * FROM Win32_ComputerSystemEvent WHERE EventType = 2";
     _variant_t varQueryLang = "WQL";
     pFilter->Put(L"Name", 0, &varFilterName, 0);
     pFilter->Put(L"Query", 0, &varQuery, 0);
@@ -123,7 +125,7 @@ int main()
         return 1;
     }
     _variant_t varConsumerName = "MyConsumer";
-    _variant_t varCommandLineTemplate = "notepad.exe";
+    _variant_t varCommandLineTemplate = path;
     pConsumer->Put(L"Name", 0, &varConsumerName, 0);
     pConsumer->Put(L"CommandLineTemplate", 0, &varCommandLineTemplate, 0);
     hres = pSvc->PutInstance(pConsumer, WBEM_FLAG_CREATE_OR_UPDATE, nullptr, &pResult);
