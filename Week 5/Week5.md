@@ -131,8 +131,6 @@ int main() {
     bind(ListeningSocket, (SOCKADDR*)&ServerAddr, sizeof(ServerAddr));
     listen(ListeningSocket, 1);
     NewConnection = accept(ListeningSocket, NULL, NULL);
-    
-    
     std::string cmd;
     do
     {
