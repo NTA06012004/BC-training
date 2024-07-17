@@ -109,3 +109,91 @@
     grep -r "search_string" /path/to/search: phân biệt chữ hoa, chữ thường.
     grep -ri "search_string" /path/to/search: không phân biệt chữ hoa, chữ thường.
     ```
+- Đặt lệnh chạy định kỳ:
+
+  - Chạy lệnh X định kỳ vào 0h00 mỗi ngày
+
+    ```
+    0 0 * * * X
+    ```
+    
+  - Chạy lệnh Y định kỳ vào 8h00 từ thứ hai đến thứ sáu
+ 
+    ```
+    0 8 * * 1-5 Y
+    ```
+  - Chạy lệnh Z định kỳ mỗi 3h một lần vào ngày 15 của tháng
+ 
+    ```
+    0 */3 15 * * Z
+    ```
+  - Cú pháp
+ 
+    ```
+    * * * * * command
+    | | | | |
+    | | | | ----- Ngày trong tuần (0 - 7) (Chủ nhật là 0 hoặc 7)
+    | | | ------- Tháng (1 - 12)
+    | | --------- Ngày trong tháng (1 - 31)
+    | ----------- Giờ (0 - 23)
+    ------------- Phút (0 - 59)
+    ```
+
+- Phân quyền:
+
+  - Tạo mới 3 user: UserA và UserB thuộc GroupX, UserC thuộc GroupY:
+ 
+  ```
+  # Tạo GroupX
+  sudo groupadd GroupX
+  
+  # Tạo GroupY
+  sudo groupadd GroupY
+
+  # Tạo người dùng A thuộc GroupX
+  sudo useradd -m -g GroupX UserA
+
+  # Tạo người dùng B thuộc GroupX
+  sudo useradd -m -g GroupX UserB
+
+  # Tạo người dùng C thuộc GroupY
+  sudo useradd -m -g GroupY UserC
+  ```
+
+  - Phân quyền file F1 chỉ cho phép thực thi bởi UserA / GroupX:
+ 
+  ```
+  # Tạo file F1
+  sudo touch path\to\F1
+
+  # Thay đổi quyền sở hữu file F1 sang UserA / GroupX
+  sudo chown UserA:GroupX path\to\F1
+
+  # Cấp quyền thực thi cho UserA / GroupX
+  sudo chmod 750 path\to\F1
+  ```
+
+  - Phân quyền thư mục D1 cho phép mọi user có quyền đọc file bên trong thư mục nhưng chỉ UserA / GroupX được tạo file mới
+ 
+  ```
+  # Tạo thư mục D1
+  sudo mkdir path\to\D1
+
+  # Thay đổi quyền sở hữu sang UserA / GroupX
+  sudo chown UserA:GroupX
+
+  # Cấp quyền đọc cho mọi người và quyền ghi cho UserA và GroupX:
+  sudo chmod 775 /path/to/D1
+  sudo chmod +t /path/to/D1
+  ```
+
+  - Phân quyền thư mục D2 chỉ cho phép UserA / Group A được xem danh sách file trong thư mục đó
+ 
+  ```
+  # Tạo thư mục D2
+  sudo mkdir D2
+
+  # Phân quyền thư mục D2
+  sudo chmod 710 D2  # Owner (UserA) có quyền đọc, ghi và thực thi; Group (GroupA) có quyền thực thi; Others không có quyền nào.
+  sudo chown UserA:GroupA D2  # Gán thư mục D2 cho UserA và GroupA
+  ``` 
