@@ -6,7 +6,7 @@
  
     ```
     uname -a
-    cat /etc/osrelease
+    cat /etc/os-release
     ```
  
   - Danh sách các gói phần mềm được cài đặt:
