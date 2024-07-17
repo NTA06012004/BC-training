@@ -76,11 +76,21 @@
 
   - Tìm theo thời gian chỉnh sửa / truy cập cuối:
  
-   ```
-   find path -mtime +n: tìm kiếm tệp được chỉnh sửa cách đây hơn n ngày
-   find path -mtime -n: tìm kiếm tệp được chỉnh sửa trong n ngày qua
-   ```
+    ```
+    find path -mtime +n: tìm kiếm tệp được chỉnh sửa cách đây hơn n ngày
+    find path -mtime -n: tìm kiếm tệp được chỉnh sửa trong n ngày qua
+    ```
 
-   - Tìm theo dung lượng:
+  - Tìm theo dung lượng:
  
-    - 
+    ```
+    find path -size +nM: Tìm tệp có dung lượng lớn hơn n MB.
+    find path -size -nM: Tìm tệp có dung lượng nhỏ hơn n MB.
+    ```
+ 
+  - Tìm kiếm theo nội dung file
+ 
+    ```
+    grep -r "search_string" /path/to/search: phân biệt chữ hoa, chữ thường.
+    grep -ri "search_string" /path/to/search: không phân biệt chữ hoa, chữ thường.
+    ```
