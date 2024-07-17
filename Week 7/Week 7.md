@@ -43,9 +43,16 @@
   - Xem thông tin địa chỉ IP, Gateway, DNS:
  
     ```
-    
+    ip addr show
+    ip route show
+    cat /etc/resolv.conf
     ```
-
+  - Xem các kết nối và tiến trình tương ứng:
+ 
+    ```
+    ss -tuln
+    ss -tp
+    ```
 - Quản lý tiến trình:
 
   - Xem danh sách các tiến trình đang chạy: Tên, PID, User, Lệnh để chạy tiến trình:
