@@ -38,6 +38,14 @@
     df -h
     ```
     
+- Xem thông tin về mạng:
+
+  - Xem thông tin địa chỉ IP, Gateway, DNS:
+ 
+    ```
+    
+    ```
+
 - Quản lý tiến trình:
 
   - Xem danh sách các tiến trình đang chạy: Tên, PID, User, Lệnh để chạy tiến trình:
