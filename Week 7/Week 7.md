@@ -243,56 +243,41 @@ apt list --installed
 ```
 #!/bin/bash
 
-sudo touch /var/log/checketc.log
-sudo touch /var/log/checketc.curr
-
 LOG_FILE="/var/log/checketc.log"
-PREV_STATE="/var/log/checketc.prev"
-CURR_STATE="/var/log/checketc.curr"
 
-find /etc -type f -exec stat --format '%n %Y' {} \; > "$CURR_STATE"
-
-if [ ! -f "$PREV_STATE" ]; then
-    sudo touch $PREV_STATE
-    cp "$CURR_STATE" "$PREV_STATE"
-    exit 0
-fi
-
-NEW_FILES=$(comm -13 <(sort "$PREV_STATE") <(sort "$CURR_STATE"))
-MODIFIED_FILES=$(comm -12 <(sort "$PREV_STATE") <(sort "$CURR_STATE") | cut -d ' ' -f1)
-DELETED_FILES=$(comm -23 <(sort "$PREV_STATE") <(sort "$CURR_STATE") | cut -d ' ' -f1)
+CURRENT_TIME=$(date +"%H:%M:%S %d/%m/%Y")
 
 {
-    echo "========================================"
-    echo "Thời gian: $(date)"
-    
-    if [ -n "$NEW_FILES" ]; then
-        echo "Các file mới được tạo:"
-        echo "$NEW_FILES"
-        
-        # Hiển thị 10 dòng đầu của các file text mới
-        for FILE in $NEW_FILES; do
-            if file "$FILE" | grep -q 'text'; then
-                echo "10 dòng đầu của $FILE:"
-                head -n 10 "$FILE"
-            fi
-        done
+  echo "[Log checketc - $CURRENT_TIME]"
+
+  # 1. Kiểm tra thư mục /etc có file nào được tạo mới không?
+  echo "=== Danh sach file tao moi ==="
+  find /etc -type f -cmin -30 | while read -r file; do
+    echo "$file"
+    if [ "$(file -b --mime-type "$file")" == "text/plain" ]; then
+      head "$file"
     fi
-    
-    if [ -n "$MODIFIED_FILES" ]; then
-        echo "Các file bị thay đổi:"
-        echo "$MODIFIED_FILES"
-    fi
-    
-    if [ -n "$DELETED_FILES" ]; then
-        echo Các file bị xóa:
-        echo "$DELETED_FILES"
-    fi
+  done
+
+  # 2. Kiểm tra thư mục /etc có file nào thay đổi không?
+  echo "=== Danh sach file sua doi ==="
+  find /etc -type f -mmin -30 | while read -r file; do
+    echo "$file"
+  done
+
+  # 3. Thư mục /etc có file nào bị xóa không?
+  echo "=== Danh sach file bi xoa ==="
+  comm -23 <(ls -1 /etc | sort) <(find /etc -type f | xargs -n 1 basename | sort) | while read -r file; do
+    echo "$file"
+  done
+
 } >> "$LOG_FILE"
 
-mail -s "Thông tin kiểm tra thư mục /etc" root@localhost < "$LOG_FILE"
+echo -e "Subject: Log checketc - $CURRENT_TIME\n\n$(cat "$LOG_FILE")" | sendmail root@localhost
 
-mv "$CURR_STATE" "$PREV_STATE"
+
+# */30 * * * * /path/to/checketc.sh
+
 ```
 
 # 3.3
@@ -300,35 +285,33 @@ mv "$CURR_STATE" "$PREV_STATE"
 ```
 #!/bin/bash
 
+# Đường dẫn tới file lưu danh sách các phiên đăng nhập mới
 LOG_FILE="/var/log/sshmonitor.log"
-PREV_LOGINS="/var/log/sshmonitor.prev"
-CURR_LOGINS="/var/log/sshmonitor.curr"
 
-# Ghi lại các phiên đăng nhập SSH hiện tại
-who | grep 'pts/' > "$CURR_LOGINS"
+# Thời gian hiện tại
+CURRENT_TIME=$(date +"%H:%M:%S %d/%m/%Y")
 
-# Kiểm tra xem lần chạy trước đã tồn tại chưa
-if [ ! -f "$PREV_LOGINS" ]; then
-    cp "$CURR_LOGINS" "$PREV_LOGINS"
-    exit 0
+# Kiểm tra danh sách phiên đăng nhập mới và ghi vào file log
+{
+  echo "[SSH Monitor - $CURRENT_TIME]"
+
+  # Lấy danh sách các phiên đăng nhập mới
+  NEW_SESSIONS=$(journalctl _COMM=sshd --since "5 minutes ago" | grep "Accepted password\|Accepted publickey" | awk '{print $1, $2, $3, $10, $11}')
+
+  # Ghi vào file log
+  if [ -n "$NEW_SESSIONS" ]; then
+    echo "=== Danh sach phiên dang nhap moi ==="
+    echo "$NEW_SESSIONS"
+  fi
+
+} >> "$LOG_FILE"
+
+# Kiểm tra xem có phiên đăng nhập mới hay không
+if [ -s "$LOG_FILE" ]; then
+  # Gửi email cho quản trị viên root@localhost
+  mail -s "SSH Monitor - $CURRENT_TIME" root@localhost < "$LOG_FILE"
 fi
 
-# Tìm các phiên đăng nhập mới
-NEW_LOGINS=$(comm -13 <(sort "$PREV_LOGINS") <(sort "$CURR_LOGINS"))
-
-# Nếu có phiên đăng nhập mới, ghi log và gửi email cho quản trị viên
-if [ -n "$NEW_LOGINS" ]; then
-    {
-        echo "========================================"
-        echo "Thời gian: $(date)"
-        echo "Phiên đăng nhập SSH mới:"
-        echo "$NEW_LOGINS"
-    } >> "$LOG_FILE"
-    
-    # Gửi email log cho quản trị viên
-    mail -s "Thông tin phiên đăng nhập SSH mới" root@localhost < "$LOG_FILE"
-fi
-
-# Cập nhật trạng thái hiện tại thành trạng thái trước
-mv "$CURR_LOGINS" "$PREV_LOGINS"
+# crontab -e
+# */5 * * * * /path/to/sshmonitor.sh
 ```
