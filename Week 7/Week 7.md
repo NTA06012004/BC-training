@@ -391,7 +391,7 @@ sudo a2ensite web2.conf
 sudo systemctl restart apache2
 ```
 
-# 3.5
+# 3.6
 
 1. Cài MySql
 
