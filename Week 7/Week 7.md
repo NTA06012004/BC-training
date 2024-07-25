@@ -243,6 +243,9 @@ apt list --installed
 ```
 #!/bin/bash
 
+sudo touch /var/log/checketc.log
+sudo touch /var/log/checketc.curr
+
 LOG_FILE="/var/log/checketc.log"
 PREV_STATE="/var/log/checketc.prev"
 CURR_STATE="/var/log/checketc.curr"
@@ -252,6 +255,7 @@ find /etc -type f -exec stat --format '%n %Y' {} \; > "$CURR_STATE"
 
 # Kiểm tra xem lần chạy trước đã tồn tại chưa
 if [ ! -f "$PREV_STATE" ]; then
+    sudo touch $PREV_STATE
     cp "$CURR_STATE" "$PREV_STATE"
     exit 0
 fi
@@ -288,7 +292,7 @@ DELETED_FILES=$(comm -23 <(sort "$PREV_STATE") <(sort "$CURR_STATE") | cut -d ' 
     
     # Kiểm tra file bị xóa
     if [ -n "$DELETED_FILES" ]; then
-        echo "Các file bị xóa:"
+        echo Các file bị xóa:
         echo "$DELETED_FILES"
     fi
 } >> "$LOG_FILE"
