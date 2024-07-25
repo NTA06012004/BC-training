@@ -250,27 +250,22 @@ LOG_FILE="/var/log/checketc.log"
 PREV_STATE="/var/log/checketc.prev"
 CURR_STATE="/var/log/checketc.curr"
 
-# Ghi lại trạng thái hiện tại của thư mục /etc
 find /etc -type f -exec stat --format '%n %Y' {} \; > "$CURR_STATE"
 
-# Kiểm tra xem lần chạy trước đã tồn tại chưa
 if [ ! -f "$PREV_STATE" ]; then
     sudo touch $PREV_STATE
     cp "$CURR_STATE" "$PREV_STATE"
     exit 0
 fi
 
-# So sánh trạng thái trước và hiện tại để tìm sự thay đổi
 NEW_FILES=$(comm -13 <(sort "$PREV_STATE") <(sort "$CURR_STATE"))
 MODIFIED_FILES=$(comm -12 <(sort "$PREV_STATE") <(sort "$CURR_STATE") | cut -d ' ' -f1)
 DELETED_FILES=$(comm -23 <(sort "$PREV_STATE") <(sort "$CURR_STATE") | cut -d ' ' -f1)
 
-# Ghi log thông tin về các file mới, file thay đổi và file bị xóa
 {
     echo "========================================"
     echo "Thời gian: $(date)"
     
-    # Kiểm tra file mới
     if [ -n "$NEW_FILES" ]; then
         echo "Các file mới được tạo:"
         echo "$NEW_FILES"
@@ -284,23 +279,19 @@ DELETED_FILES=$(comm -23 <(sort "$PREV_STATE") <(sort "$CURR_STATE") | cut -d ' 
         done
     fi
     
-    # Kiểm tra file bị thay đổi
     if [ -n "$MODIFIED_FILES" ]; then
         echo "Các file bị thay đổi:"
         echo "$MODIFIED_FILES"
     fi
     
-    # Kiểm tra file bị xóa
     if [ -n "$DELETED_FILES" ]; then
         echo Các file bị xóa:
         echo "$DELETED_FILES"
     fi
 } >> "$LOG_FILE"
 
-# Gửi email log cho quản trị viên
 mail -s "Thông tin kiểm tra thư mục /etc" root@localhost < "$LOG_FILE"
 
-# Cập nhật trạng thái hiện tại thành trạng thái trước
 mv "$CURR_STATE" "$PREV_STATE"
 ```
 
