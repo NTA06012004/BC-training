@@ -315,3 +315,151 @@ fi
 # crontab -e
 # */5 * * * * /path/to/sshmonitor.sh
 ```
+
+# 3.4
+
+1. Cài đặt apache2:
+
+```
+sudo apt install apache2
+```
+
+2. Tạo file html
+
+```
+echo "<h1>Hello world, apache2</h1>" | sudo tee /var/www/html/index1.html 
+```
+
+# 3.5
+
+1. Tạo thư mục web1, web2
+
+```
+sudo mkdir /var/www/web1
+sudo mkdir /var/www/web2
+```
+
+2. Tạo file html cho web1, web2
+
+```
+echo "<h1>Hello web1</h1>" | sudo tee /var/www/web1.com/index.html 
+echo "<h1>Hello web2</h1>" | sudo tee /var/www/web2.com/index.html 
+```
+
+3. Tạo file cấu hình cho web1, web2
+
+- Web1
+```
+- Tạo file
+sudo nano /etc/apache2/sites-available/web1.conf
+
+- Ghi vào file
+<VirtualHost *:80>
+    ServerAdmin webmaster@web1.com
+    ServerName web1.com
+    DocumentRoot /var/www/web1
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+- Web2
+```
+- Tạo file
+sudo nano /etc/apache2/sites-available/web2.conf
+
+- Ghi vào file
+<VirtualHost *:80>
+    ServerAdmin webmaster@web1.com
+    ServerName web1.com
+    DocumentRoot /var/www/web1
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+4. Cấu hình Virtual host
+
+```
+sudo a2ensite web1.conf
+sudo a2ensite web2.conf
+```
+
+5. Reset lại apache2
+
+```
+sudo systemctl restart apache2
+```
+
+# 3.5
+
+1. Cài MySql
+
+```
+sudo apt update
+sudo apt install mysql-server
+sudo mysql_secure_installation
+```
+
+2. Cài PHP
+
+```
+sudo apt install php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip
+```
+
+3. Cài Wordpress
+
+3.1. Cài Wordpress
+
+```
+cd /tmp
+wget https://wordpress.org/latest.tar.gz
+tar xf latest.tar.gz
+```
+
+3.2. Di chuyển WordPress vào thư mục DocumentRoot của Virtual Host web1:
+
+```
+sudo cp -R /tmp/wordpress/* /var/www/web1/
+```
+
+3.3. Tạo cơ sở dữ liệu MySQL cho WordPress:
+
+```
+sudo mysql -u root -p
+
+- Ghi vào mysql
+
+CREATE DATABASE wordpress;
+CREATE USER 'wordpressuser'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpressuser'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+3.4. Cấu hình Wordpress
+
+```
+sudo cp /var/www/web1/wp-config-sample.php /var/www/web1/wp-config.php
+sudo nano /var/www/web1/wp-config.php
+
+Sửa thông tin file
+
+define('DB_NAME', 'wordpress');
+define('DB_USER', 'wordpressuser');
+define('DB_PASSWORD', 'password');
+define('DB_HOST', 'localhost');
+```
+
+3.5. Phân quyền cho WordPress
+
+```
+sudo chown -R www-data:www-data /var/www/web1 & sudo chmod -R 755 /var/www/web1
+```
+
+3.6. Khởi động lại Apache và MySQL:
+
+```
+sudo service apache2 restart
+sudo service mysql restart
+```
