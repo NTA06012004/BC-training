@@ -463,3 +463,5 @@ sudo chown -R www-data:www-data /var/www/web1 & sudo chmod -R 755 /var/www/web1
 sudo service apache2 restart
 sudo service mysql restart
 ```
+
+https://www.hostinger.vn/huong-dan/lam-the-nao-de-cai-dat-wordpress#Huong_dan_cai_dat_WordPress_tren_may_Linux_VPS_Ubuntu_1604
