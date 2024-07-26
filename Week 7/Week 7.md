@@ -280,7 +280,7 @@ echo -e "Subject: Log checketc - $CURRENT_TIME\n\n$(cat "$LOG_FILE")" | sendmail
 
 ```
 
-# 3.3
+## 3.3
 
 ```
 #!/bin/bash
@@ -316,7 +316,7 @@ fi
 # */5 * * * * /path/to/sshmonitor.sh
 ```
 
-# 3.4
+## 3.4
 
 1. Cài đặt apache2:
 
@@ -330,7 +330,7 @@ sudo apt install apache2
 echo "<h1>Hello world, apache2</h1>" | sudo tee /var/www/html/index1.html 
 ```
 
-# 3.5
+## 3.5
 
 1. Tạo thư mục web1, web2
 
@@ -391,7 +391,7 @@ sudo a2ensite web2.conf
 sudo systemctl restart apache2
 ```
 
-# 3.6
+## 3.6
 
 1. Cài MySql
 
