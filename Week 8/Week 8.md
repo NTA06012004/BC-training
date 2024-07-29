@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
 int main()
 {
-	setreuid(geteuid(), geteuid());
+    setreuid(geteuid(), geteuid());
     system("id");
     return 0;
 }
