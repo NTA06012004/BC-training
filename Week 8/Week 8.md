@@ -19,7 +19,6 @@
 
 int main(int argc, char *argv[])
 {
-    setreuid(geteuid(), geteuid());
     if (argc != 2)
     {
         return 0;
@@ -31,10 +30,33 @@ int main(int argc, char *argv[])
     system(command);
     return 0;
 }
+
 ```
 
 ## Bài 2:
 
 ```
+#include <stdio.h>
+#include <stdlib.h>
 
+int main()
+{
+	setreuid(geteuid(), geteuid());
+    system("id");
+    return 0;
+}
+
+```
+
+Compile chương trình:
+
+```
+gcc -o run_id run_id.c
+```
+
+Sau đó, thiết lập quyền sở hữu và quyền setuid cho user2:
+
+```
+sudo chown user2:user2 run_id
+sudo chmod u+s run_id
 ```
