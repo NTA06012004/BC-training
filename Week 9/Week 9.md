@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
 ```
 crontab -e
-*/5 * * * * /path/to/reverse-shell 127.0.0.1 1234
+*/5 * * * * /path/to/malware 127.0.0.1 1234
 ```
 
 ## Bài 2:
