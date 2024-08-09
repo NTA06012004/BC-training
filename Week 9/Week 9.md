@@ -70,12 +70,31 @@ crontab -e
 
 ## Bài 2:
 
-- startup script
-
 - rc script
 
-```
-ln -s /path/to/malware /etc/rc6.d/malware
-```
+  ```
+  ln -s /path/to/malware /etc/rc6.d/malware
+  ```
 
 - init script
+
+  - Tạo 1 tập tin service trong systemd (ví dụ: /etc/systemd/system/malware.service):
+  
+  ```
+  [Unit]
+  Description=Reverse Shell
+  
+  [Service]
+  ExecStart=/path/to/malware 127.0.0.1 1234
+  Restart=always
+  
+  [Install]
+  WantedBy=default.target
+  ```
+
+  - Khởi động lại systemd:
+ 
+  ```
+  sudo systemctl enable malware.service
+  sudo systemctl start malware.service
+  ```
