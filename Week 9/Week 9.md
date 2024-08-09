@@ -70,6 +70,12 @@ crontab -e
 
 ## Bài 2:
 
+- startup script
+
+- rc script
+
 ```
 ln -s /path/to/malware /etc/rc6.d/malware
 ```
+
+- init script
