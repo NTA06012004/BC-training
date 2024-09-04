@@ -1,5 +1,66 @@
 # Lý thuyết
 
+## Virtual memory
+
+- Virtual memory là một kỹ thuật quản lý bộ nhớ cho phép mỗi ứng dụng được chia sẻ không gian bộ nhớ mà không cần lo lắng về việc quản lý vùng nhớ thực tế. Nó tạo ra không gian bộ nhớ mà từ quan điểm của ứng dụng, nó sở hữu toàn bộ không gian bộ nhớ
+
+## Segmented memory, Paged memory
+
+- Segmented memory (bộ nhớ phân đoạn): là một kỹ thuật quản lý bộ nhớ mà trong đó không gian của tiến trình được chia thành các đoạn có kích thước khác nhau.
+
+  - Nguyên lý:
+ 
+    - Phân đoạn: bộ nhớ của tiến trình được phân chia thành các đoạn có kích thước khác nhau.
+   
+    - Địa chỉ đoạn: mỗi địa chỉ bao gồm 2 phần: số hiệu đoạn và offset trong đoạn đó.
+   
+- Paged memory: là một kỹ thuật quản lý bộ nhớ trong đó, không gian địa chỉ của một tiến trình được chia thành các khối nhỏ có kích thước cố định. Các trang này sau đó được ánh xạ tới khung trang trong bộ nhớ vật lý
+
+  - Nguyên lý:
+ 
+    - Phân trang: Bộ nhớ ảo của tiến trình chia thành các trang cố định có kích thước 4KB.
+   
+    - Khung trang: Bộ nhớ vật lý được chia thành khung trang giống kích thước trang.
+   
+    - Bảng trang: Mỗi tiến trình có một bảng trang riêng chứa các mục ánh xạ từ số trang ảo sang số khung trang vật lý.
+   
+  - So sánh:
+ 
+    - Paging nhanh hơn segmentation
+## Andress Translation
+
+- Là quá trình chuyển đổi địa chỉ ảo thành địa chỉ vật lý trong hệ thống máy tính.
+ 
+## Alignment
+
+- CPU luôn đọc ở kích thước word (4 bytes cho 32 bit)
+ 
+- Việc này giúp đọc dữ liệu nhanh hơn.
+ 
+## Protection Attributes
+
+- Protection Attributes: là các thuộc tính được sử dụng để kiểm soát quyền truy cập vào các vùng bộ nhớ hoặc tài nguyên khác trong hệ thống máy tính. Các thuộc tính này giúp bảo vệ dữ liệu và đảm bảo rằng chỉ các tiến trình hoặc người dùng có quyền hợp lệ mới có thể truy cập hoặc thay đổi dữ liệu.
+
+## Stack, Heap
+
+- Stack
+
+  - Khi một thread được tạo, bộ nhớ sẽ luôn dự trữ 1Mb cho user stack và 12kb cho kernel stack (32bit).
+   
+  - Lưu biến cục bộ, giá trị trả về của hàm, dùng để chuyền tham số cho hàm.
+   
+  - Các biến được tạo trên ngăn xếp nằm ngoài phạm vi và sẽ tự động được giải phóng.
+   
+- Heap là một vùng bộ nhớ động trong hệ thống, được sử dụng để cấp phát bộ nhớ cho các biến và đối tượng mà thời gian sống của chúng không được xác định trước.
+ 
+  - Được lưu trong RAM giống stack.
+   
+  - Được dùng để phân bổ dữ liệu cho chương trình sử dụng.
+   
+  - Có thể xảy ra lỗi nếu bộ đệm quá lớn.
+   
+
+
 # Bài tập
 
 ## Bài 1
