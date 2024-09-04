@@ -1,5 +1,78 @@
 # Lý thuyết
 
+## Modifying registry keys
+
+- Mã độc sẽ tự thêm mình vào key run của máy tính để mỗi khi máy tính được khởi động, mã độc sẽ được chạy.
+
+- Các key được dùng:
+
+  - HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+
+  - HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+  - HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+
+  - HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce
+ 
+## Special folders
+
+- Mã độc sẽ tự thêm bản thân vào các folder đặc biệt để nó có thể tự chạy mỗi khi máy tính được khởi động:
+
+- Thư mục được dùng: C:\Users\[Username]\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+
+## Task scheduler
+
+- Mã độc sẽ tự tạo 1 task để chạy mỗi khi máy tính khởi động hoặc để chạy trong một thời điểm nào đó.
+
+- Một task có 3 thành phần:
+
+  - Trigger (Kích hoạt): Đây là sự kiện hoặc điều kiện nào đó mà khi xảy ra sẽ kích hoạt công việc.
+ 
+  - Action (Hành động): Đây là công việc cụ thể sẽ được thực hiện khi Trigger được kích hoạt.
+ 
+  - Conditions (Điều kiện): Điều kiện được sử dụng để kiểm soát khi nào công việc được thực hiện dựa trên các điều kiện hệ thống cụ thể.
+ 
+- Ví dụ:
+
+  - Chạy mỗi khi khởi động lại máy:
+ 
+    ```
+    #include <windows.h>
+    
+    int main()
+    {
+        system("schtasks /create /sc onstart /tn MyNotepadTask /tr \"C:\\Windows\\System32\\notepad.exe\"");
+        return 0;
+    }
+    ``` 
+
+  - Chạy mỗi khi 5h chiều:
+ 
+    ```
+    #include <windows.h>
+  
+    int main()
+    {
+        system("schtasks /create /sc daily /st 17:00 /tn MyNotepadTask /tr \"C:\\Windows\\System32\\notepad.exe\"");
+        return 0;
+    }
+    ```
+## Shortcut hijacking
+
+- Mã độc sẽ tạo ra các shortcut hoặc sửa các shortcut đã có trên máy tính để khi người dùng nhấp vào shortcut giả mạo đó, mã độc sẽ được mở lên.
+
+## WMI event subscription
+
+- WMI (Windows Management Instrumentation) Event Subscription là một kỹ thuật mà malware thường sử dụng để duy trì persistence (khả năng tồn tại và tự khởi động lại sau khi hệ thống được khởi động lại) trên máy tính bị nhiễm.
+
+- Có 3 bước chính:
+
+  - Event Filter: thiết lập một event filter để theo dõi một sự kiện cụ thể, có thể là sự kiện khởi động lại hoặc quá trình đăng nhập của người dùng.
+ 
+  - Event Consumer: thiết lập một event consumer để cho biết điều gì sẽ xảy ra khi sự kiện ở event filter xảy ra.
+ 
+  - Filter to Consumer Binding: cuối cùng mã độc sẽ liên kết event filter và event consumer.
+
 # Bài tập
 
 ## Modifying registry keys 
