@@ -162,10 +162,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     - Sau khi upload webshell lên máy chủ, truy cập vào đường dẫn chứa webshell và gõ lệnh muốn dùng.
  
-    <img src = ''>
+    <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2012/File%20PNG/1.png'>
 
 - Http tunnel
 
     - Sau khi upload webshell lên máy chủ, ở phía server gõ lệnh muốn dùng.
  
-    <img src = ''> 
+    <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2012/File%20PNG/2.png'> 
