@@ -40,9 +40,13 @@
 
   <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/7.png'>
 
+  <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/11.png'>
+
 - Phân tích hàm `sub_401320`:
 
   - Mã độc sẽ tạo ra file `Keylog.dll` bằng cách tạo file rỗng có tên như vậy và copy data từ resource có tên chứa chuỗi dll vào file rỗng đó.
+ 
+    <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/12.png'>
 
   - Tiếp theo, mã độc sẽ thực thi hàm `FillKeyboard` của dll bằng hàm `SetWindowsHookExW` với idHook là 2, mỗi khi có sự kiện bàn phím xảy ra hàm này sẽ được thực thi.
  
