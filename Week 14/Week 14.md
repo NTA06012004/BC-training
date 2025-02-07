@@ -40,6 +40,7 @@
 
   <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/7.png'>
 
+  
   <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/11.png'>
 
 - Phân tích hàm `sub_401320`:
