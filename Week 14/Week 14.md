@@ -65,9 +65,9 @@
 
   - Hàm này tạo ra file `Log.txt` và ghi tên cửa sổ đang được dùng, dữ liệu thời gian, các phím được ấn xuống vào đó.
  
-    <img src = ''>
+    <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/15.png'>
 
-    <img src = ''>
+    <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/16.png'>
 
     ```
             switch ( wParam )
@@ -419,6 +419,8 @@
 - Phân tích hàm `SetGlobalHookHandle`
 
   - Hàm này là hàm kiểm tra trạng thái hook của mã độc.
+ 
+    <img src = 'https://github.com/NTA06012004/BC-training/blob/main/Week%2014/File%20PNG/17.png'>
  
 # Vòng lặp
 
